@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th=”http://www.thymeleaf.org”
+	xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+
+<head>
+<meta charset="utf-8">
+<title>Index</title>
+<link rel="stylesheet" th:href="@{/stylesheets/bootstrap.min.css}">
+<link rel=”stylesheet” type="text/css"
+	th:href="@{/stylesheets/main.css}">
+<script th:src="@{/javascript/bootstrap.min.js}"></script>
+</head>
+<body>
+	<nav class="navbar navbar-dark bg-dark">
+		<div class="container-lg">
+			<form id="logoutForm" method="POST" th:action="@{/logout}">
+				<input type="hidden" name="${_csrf.parameterName}"
+					value="${_csrf.token}" />
+				<div sec:authorize="isAuthenticated()">
+					<span class="navbar-brand mb-1 h1">Welcome</span>
+					<span class="navbar-brand mb-1 h1" sec:authentication="name"></span>
+				</div>
+			</form>
+			<button type="button"
+					class="btn btn-primary position-relative float-right"
+					onclick="document.forms['logoutForm'].submit()">Logout</button>
+		</div>
+	</nav>
+</body>
+</html>

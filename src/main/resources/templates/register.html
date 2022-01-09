@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th=”http://www.thymeleaf.org”>
+
+<head>
+<meta charset="utf-8">
+<title>Index</title>
+<link rel="stylesheet" th:href="@{/stylesheets/bootstrap.min.css}">
+<link rel=”stylesheet” type="text/css"
+	th:href="@{/stylesheets/main.css}">
+<script th:src="@{/javascript/bootstrap.min.js}"></script>
+</head>
+<body>
+	<nav class="navbar navbar-dark bg-dark">
+		<div class="container-lg">
+			<a class="navbar-brand" href="#">Navbar</a>
+		</div>
+	</nav>
+	<div class="container-lg">
+		<form th:object=${registrationDetails} th:action="@{/register}"
+			method="post">
+			<span th:text="${message}"></span>
+			<div class="mb-3">
+				<label for="exampleInputEmail1" class="form-label">Email
+					address</label>
+				<input type="email"
+					th:classappend="${#fields.hasErrors('emailId')} ? 'form-control is-invalid' : 'form-control'"
+					id="exampleInputEmail1" aria-describedby="emailHelp"
+					th:field="*{emailId}">
+				<div id="validationServerEmailIdFeedback" class="invalid-feedback"
+					th:errors="*{emailId}"></div>
+			</div>
+			<div class="mb-3">
+				<label for="exampleInputPassword1" class="form-label">Password</label>
+				<input type="password"
+					th:classappend="${#fields.hasErrors('password')} ? 'form-control is-invalid' : 'form-control'"
+					id="exampleInputPassword1" th:field="*{password}">
+				<div id="validationServerPasswordFeedback" class="invalid-feedback"
+					th:errors="*{password}"></div>
+			</div>
+			<div class="mb-3">
+				<label for="exampleInputFullName1" class="form-label">Full
+					Name</label>
+				<input type="text"
+					th:classappend="${#fields.hasErrors('fullName')} ? 'form-control is-invalid' : 'form-control'"
+					id="exampleInputFullName1" th:field="*{fullName}">
+				<div id="validationServerFullNameFeedback" class="invalid-feedback"
+					th:errors="*{fullName}"></div>
+			</div>
+			<div class="mb-3">
+				<label for="exampleInputMobileNumber1" class="form-label">Mobile
+					Number</label>
+				<input type="text"
+					th:classappend="${#fields.hasErrors('mobileNumber')} ? 'form-control is-invalid' : 'form-control'"
+					id="exampleInputMobileNumber1" th:field="*{mobileNumber}">
+				<div id="validationServerMobileNumberFeedback"
+					class="invalid-feedback" th:errors="*{mobileNumber}"></div>
+			</div>
+			<div class="mb-3">
+				<label for="exampleInputEntryText1" class="form-label">Entry
+					Text</label>
+				<input type="text" class="form-control" id="exampleInputEntryText1"
+					th:field="*{entryText}">
+			</div>
+			<div class="mb-3">
+				<label for="formFile" class="form-label">Entry Image</label>
+				<input class="form-control" type="file" id="formFile"
+					th:field="*{entryImage}">
+			</div>
+			<span class="has-error" th:text="${error}"></span>
+			<button type="submit" class="btn btn-primary">Submit</button>
+		</form>
+	</div>
+</body>
+</html>

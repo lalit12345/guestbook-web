@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th=”http://www.thymeleaf.org”>
+
+<head>
+<meta charset="utf-8">
+<title>Index</title>
+<link rel="stylesheet" th:href="@{/stylesheets/bootstrap.min.css}">
+<link rel=”stylesheet” type="text/css"
+	th:href="@{/stylesheets/main.css}">
+<script th:src="@{/javascript/bootstrap.min.js}"></script>
+</head>
+<body>
+	<nav class="navbar navbar-dark bg-dark">
+		<div class="container-lg">
+			<a class="navbar-brand" href="#">Navbar</a>
+		</div>
+	</nav>
+	<div class="container-lg">
+		<form th:object=${credentials} th:action="@{/login}" method="post">
+			<span th:text="${message}"></span>
+			<div th:if="${error}" class="has-error alert alert-danger"
+				th:text="${error}"></div>
+			<div class="mb-3">
+				<label for="exampleInputEmail1" class="form-label">Email
+					address</label>
+				<input type="email" class="form-control" id="exampleInputEmail1"
+					aria-describedby="emailHelp" th:field="*{emailId}">
+			</div>
+			<div class="mb-3">
+				<label for="exampleInputPassword1" class="form-label">Password</label>
+				<input type="password" class="form-control"
+					id="exampleInputPassword1" th:field="*{password}">
+			</div>
+			<button type="submit" class="btn btn-primary">Submit</button>
+		</form>
+	</div>
+</body>
+</html>

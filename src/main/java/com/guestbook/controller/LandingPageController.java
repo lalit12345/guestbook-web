@@ -12,12 +12,10 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Controller
-@RequestMapping(WelcomeController.PATH)
-public class WelcomeController {
+@RequestMapping(LandingPageController.PATH)
+public class LandingPageController {
 
-	public static final String VIEW = "welcome";
-
-	public static final String PATH = Constants.PATH_DELIMITER + VIEW;
+	public static final String PATH = Constants.PATH_DELIMITER;
 
 	@GetMapping
 	public String get(HttpSession httpSession) {
@@ -26,6 +24,6 @@ public class WelcomeController {
 
 		httpSession.invalidate();
 
-		return VIEW;
+		return Constants.REDIRECT + WelcomeController.PATH;
 	}
 }

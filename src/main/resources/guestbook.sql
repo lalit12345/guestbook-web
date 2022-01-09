@@ -2,8 +2,8 @@
 CREATE DATABASE `guestbook`;
 
 -- CREATE table
-CREATE TABLE guestbook.`user` (
-  `user_id` int(11) NOT NULL,
+CREATE TABLE `user` (
+  `user_id` int(11) NOT NULL AUTO_INCREMENT,
   `email_id` varchar(100) NOT NULL,
   `password` varchar(200) NOT NULL,
   `full_name` varchar(50) NOT NULL,
@@ -13,7 +13,7 @@ CREATE TABLE guestbook.`user` (
   `role` varchar(10) NOT NULL,
   PRIMARY KEY (`user_id`),
   UNIQUE KEY `email_id_UNIQUE` (`email_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
 
 -- INSERT data
 INSERT INTO guestbook.`user` (`user_id`, `email_id`, `password`, `full_name`, `mobile_number`, `entry_text`, `role`) VALUES (1, 'john@test.com', '$2a$12$.36i0tr/CudnMmCwVcZ18.rLlumLDCn5Iyfi10nHch2TMiVNi/a4W', 'John P', '01231231231', 'Entry text 1', 'USER');

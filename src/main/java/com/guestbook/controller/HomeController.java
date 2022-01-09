@@ -2,20 +2,25 @@ package com.guestbook.controller;
 
 import javax.servlet.http.HttpSession;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.guestbook.model.Constants;
+import com.guestbook.service.SecurityService;
 
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Controller
-@RequestMapping(WelcomeController.PATH)
-public class WelcomeController {
+@RequestMapping(HomeController.PATH)
+public class HomeController {
 
-	public static final String VIEW = "welcome";
+	@Autowired
+	private SecurityService securityService;
+
+	public static final String VIEW = "home";
 
 	public static final String PATH = Constants.PATH_DELIMITER + VIEW;
 
@@ -24,7 +29,9 @@ public class WelcomeController {
 
 		log.info("GET {}", PATH);
 
-		httpSession.invalidate();
+		if (!securityService.isAuthenticated()) {
+			return Constants.REDIRECT + LoginController.PATH;
+		}
 
 		return VIEW;
 	}
