@@ -55,18 +55,6 @@
 				<div id="validationServerMobileNumberFeedback"
 					class="invalid-feedback" th:errors="*{mobileNumber}"></div>
 			</div>
-			<div class="mb-3">
-				<label for="exampleInputEntryText1" class="form-label">Entry
-					Text</label>
-				<input type="text" class="form-control" id="exampleInputEntryText1"
-					th:field="*{entryText}">
-			</div>
-			<div class="mb-3">
-				<label for="formFile" class="form-label">Entry Image</label>
-				<input class="form-control" type="file" id="formFile"
-					th:field="*{entryImage}">
-			</div>
-			<span class="has-error" th:text="${error}"></span>
 			<button type="submit" class="btn btn-primary">Submit</button>
 		</form>
 	</div>

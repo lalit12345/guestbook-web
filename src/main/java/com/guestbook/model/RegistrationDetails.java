@@ -34,9 +34,4 @@ public class RegistrationDetails implements Serializable {
 	@Pattern(regexp = "^[0-9]+?|^$", message = "{mobileNumber.pattern}")
 	@NotBlank(message = "{mobileNumber.not-blank}")
 	private String mobileNumber;
-
-	private String entryText;
-
-	private String entryImage;
-
 }

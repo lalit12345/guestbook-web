@@ -42,8 +42,6 @@ public class UserServiceImpl implements UserService {
 				.password(bcryptPasswordEncoder.encode(registrationDetails.getPassword()))
 				.fullName(registrationDetails.getFullName())
 				.mobileNumber(registrationDetails.getMobileNumber())
-				.entryText(registrationDetails.getEntryText())
-				.entryImage(registrationDetails.getEntryImage())
 				.role(USER_ROLE).build();
 	}
 }
