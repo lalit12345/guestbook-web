@@ -35,7 +35,7 @@ public class LoginController {
 		log.info("GET {}", PATH);
 
 		if (securityService.isAuthenticated()) {
-			return Constants.REDIRECT + HomeController.PATH;
+			return Constants.REDIRECT + LoginSuccessController.PATH;
 		}
 
 		if (error != null)

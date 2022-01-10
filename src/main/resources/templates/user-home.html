@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th=”http://www.thymeleaf.org”
+	xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+
+<head>
+<meta charset="utf-8">
+<title>Index</title>
+<link rel="stylesheet" th:href="@{/stylesheets/bootstrap.min.css}">
+<link rel=”stylesheet” type="text/css"
+	th:href="@{/stylesheets/main.css}">
+<script th:src="@{/javascript/bootstrap.min.js}"></script>
+<script th:src="@{/javascript/jquery-3.6.0.min.js}"></script>
+<script th:inline="javascript">
+	var invalidEntry = /*[[${invalidEntry}]]*/;
+	var validEntry = /*[[${validEntry}]]*/;
+	
+	if(invalidEntry || validEntry) {
+		$(document).ready(function(){
+	        $("#staticBackdrop").modal('show');
+	    });	
+	}
+	
+	$('#modal').on('hidden.bs.modal', function(e){
+		$(this).find('#entryForm')[0].reset();
+	});
+</script>
+</head>
+<body>
+	<nav class="navbar navbar-dark bg-dark">
+		<div class="container-lg">
+			<form id="logoutForm" method="POST" th:action="@{/logout}">
+				<input type="hidden" name="${_csrf.parameterName}"
+					value="${_csrf.token}" />
+				<div sec:authorize="isAuthenticated()">
+					<span class="navbar-brand mb-1 h1">Welcome</span>
+					<span class="navbar-brand mb-1 h1" sec:authentication="name"></span>
+				</div>
+			</form>
+			<button type="button"
+				class="btn btn-primary position-relative float-right"
+				onclick="document.forms['logoutForm'].submit()">Logout</button>
+		</div>
+	</nav>
+	<div class="container-lg">
+		<button type="button" class="btn btn-primary" data-bs-toggle="modal"
+			data-bs-target="#staticBackdrop">Make an entry</button>
+		<div class="modal fade" id="staticBackdrop" data-bs-backdrop="static"
+			data-bs-keyboard="false" tabindex="-1"
+			aria-labelledby="staticBackdropLabel" aria-hidden="true">
+			<div class="modal-dialog modal-dialog-centered">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title" id="staticBackdropLabel">Entry
+							details</h5>
+					</div>
+					<div class="modal-body">
+						<div th:if="${invalidEntry}" class="alert alert-danger"
+							th:text="${invalidEntry}"></div>
+						<div th:if="${validEntry}" class="alert alert-success"
+							role="alert" th:text="${validEntry}"></div>
+						<form th:object=${guestEntryDetails} th:action="@{/user-home}"
+							method="post" enctype="multipart/form-data" id="entryForm"
+							name="entryForm">
+							<div class="mb-3">
+								<label for="entryText" class="form-label">Entry text</label>
+								<input type="text" class="form-control" id="entryText"
+									th:field="*{entryText}">
+								<div id="validationServerEntryTextFeedback"
+									class="invalid-feedback"></div>
+							</div>
+							<div class="mb-3">
+								<label for="formFile" class="form-label">Entry Image</label>
+								<input class="form-control" type="file" id="formFile"
+									th:field="*{multipartFile}">
+								<div id="validationServerEntryImageFeedback"
+									class="invalid-feedback"></div>
+							</div>
+							<button type="submit" class="btn btn-primary">Submit</button>
+							<button type="button" class="btn btn-secondary"
+								data-bs-dismiss="modal">Close</button>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+</html>

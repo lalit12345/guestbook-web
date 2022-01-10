@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th=”http://www.thymeleaf.org”>
+
+<head>
+<meta charset="utf-8">
+<title>Index</title>
+<link rel="stylesheet" th:href="@{/stylesheets/bootstrap.min.css}">
+<link rel=”stylesheet” type="text/css"
+	th:href="@{/stylesheets/main.css}">
+<script th:src="@{/javascript/bootstrap.min.js}"></script>
+</head>
+<body>
+	<nav class="navbar navbar-dark bg-dark">
+		<div class="container-lg">
+			<a class="navbar-brand" href="#">Navbar</a>
+		</div>
+	</nav>
+	<div class="container-lg">
+		<form th:object=${guestEntryDetails} th:action="@{/make-entry}"
+			method="post">
+			<div class="mb-3">
+				<label for="exampleInputEntryText1" class="form-label">Entry
+					Text</label>
+				<input type="text" class="form-control" id="exampleInputEntryText1"
+					th:field="*{entryText}">
+			</div>
+			<div class="mb-3">
+				<label for="formFile" class="form-label">Entry Image</label>
+				<input class="form-control" type="file" id="formFile"
+					th:field="*{entryImage}">
+			</div>
+			<button type="submit" class="btn btn-primary">Submit</button>
+		</form>
+	</div>
+</body>
+</html>
