@@ -12,17 +12,19 @@
 <body>
 	<nav class="navbar navbar-dark bg-dark">
 		<div class="container-lg">
-			<a class="navbar-brand" href="#">Navbar</a>
+			<a class="navbar-brand" th:href="@{/welcome}">Guestbook</a>
 		</div>
 	</nav>
-	<div class="container-lg">
+	<br>
+	<div class="container-lg" style="padding-right: 700px;">
+		<p class="h3">Sign In</p>
+		<br>
 		<form th:object=${credentials} th:action="@{/login}" method="post">
 			<span th:text="${message}"></span>
 			<div th:if="${error}" class="has-error alert alert-danger"
 				th:text="${error}"></div>
 			<div class="mb-3">
-				<label for="exampleInputEmail1" class="form-label">Email
-					address</label>
+				<label for="exampleInputEmail1" class="form-label">Email Id</label>
 				<input type="email" class="form-control" id="exampleInputEmail1"
 					aria-describedby="emailHelp" th:field="*{emailId}">
 			</div>

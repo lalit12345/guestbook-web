@@ -44,4 +44,10 @@ public class User {
 
 	private String role;
 
+	@Column(name = "is_approved", nullable = false, columnDefinition = "TINYINT(1)")
+	private boolean isApproved;
+
+	@Column(name = "delete_flag", nullable = false, columnDefinition = "TINYINT(1)")
+	private boolean deleteFlag;
+
 }

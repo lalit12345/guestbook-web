@@ -13,7 +13,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class GuestEntryDetails implements Serializable {
+public class GuestEntryDto implements Serializable {
 	/**
 	* 
 	*/

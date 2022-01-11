@@ -41,6 +41,7 @@
 				onclick="document.forms['logoutForm'].submit()">Logout</button>
 		</div>
 	</nav>
+	<br>
 	<div class="container-lg">
 		<button type="button" class="btn btn-primary" data-bs-toggle="modal"
 			data-bs-target="#staticBackdrop">Make an entry</button>
@@ -58,7 +59,7 @@
 							th:text="${invalidEntry}"></div>
 						<div th:if="${validEntry}" class="alert alert-success"
 							role="alert" th:text="${validEntry}"></div>
-						<form th:object=${guestEntryDetails} th:action="@{/user-home}"
+						<form th:object=${guestEntryDto} th:action="@{/user-home}"
 							method="post" enctype="multipart/form-data" id="entryForm"
 							name="entryForm">
 							<div class="mb-3">

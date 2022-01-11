@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.guestbook.model.Constants;
-import com.guestbook.model.GuestEntryDetails;
+import com.guestbook.model.GuestEntryDto;
 import com.guestbook.service.SecurityService;
 import com.guestbook.service.UserService;
 
@@ -43,26 +43,26 @@ public class UserHomeController {
 			return Constants.REDIRECT + LoginController.PATH;
 		}
 
-		model.addAttribute("guestEntryDetails", GuestEntryDetails.builder().build());
+		model.addAttribute("guestEntryDto", GuestEntryDto.builder().build());
 
 		return VIEW;
 	}
 
 	@PostMapping(consumes = { MediaType.MULTIPART_FORM_DATA_VALUE })
-	public String post(Model model, GuestEntryDetails guestEntryDetails, HttpSession httpSession,
+	public String post(Model model, GuestEntryDto guestEntryDto, HttpSession httpSession,
 			Authentication authentication) {
 
 		log.info("POST {}", PATH);
 
 		String emailId = authentication.getName();
 
-		if (!StringUtils.hasLength(guestEntryDetails.getEntryText())
-				&& !StringUtils.hasLength(guestEntryDetails.getMultipartFile().getOriginalFilename())) {
+		if (!StringUtils.hasLength(guestEntryDto.getEntryText())
+				&& !StringUtils.hasLength(guestEntryDto.getMultipartFile().getOriginalFilename())) {
 			model.addAttribute("invalidEntry", "Add atleast one entry");
 		} else {
 
-			userService.updateUser(emailId, guestEntryDetails.getEntryText(),
-					guestEntryDetails.getMultipartFile().getOriginalFilename());
+			userService.updateUser(emailId, guestEntryDto.getEntryText(),
+					guestEntryDto.getMultipartFile().getOriginalFilename());
 
 			model.addAttribute("validEntry", "Entry is made successfully");
 		}

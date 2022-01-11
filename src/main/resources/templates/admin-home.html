@@ -6,6 +6,8 @@
 <meta charset="utf-8">
 <title>Index</title>
 <link rel="stylesheet" th:href="@{/stylesheets/bootstrap.min.css}">
+<link rel="stylesheet"
+	href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css">
 <link rel=”stylesheet” type="text/css"
 	th:href="@{/stylesheets/main.css}">
 <script th:src="@{/javascript/bootstrap.min.js}"></script>
@@ -14,8 +16,6 @@
 	<nav class="navbar navbar-dark bg-dark">
 		<div class="container-lg">
 			<form id="logoutForm" method="POST" th:action="@{/logout}">
-				<input type="hidden" name="${_csrf.parameterName}"
-					value="${_csrf.token}" />
 				<div sec:authorize="isAuthenticated()">
 					<span class="navbar-brand mb-1 h1">Welcome</span>
 					<span class="navbar-brand mb-1 h1" sec:authentication="name"></span>
@@ -26,25 +26,108 @@
 				onclick="document.forms['logoutForm'].submit()">Logout</button>
 		</div>
 	</nav>
+	<br>
 	<div class="container-lg">
-		<ul class="nav nav-tabs" id="myTab" role="tablist">
-			<li class="nav-item" role="presentation">
-				<button class="nav-link active" id="view-tab" data-bs-toggle="tab"
-					data-bs-target="#view" type="button" role="tab"
-					aria-controls="view" aria-selected="true">View</button>
-			</li>
-			<li class="nav-item" role="presentation">
-				<button class="nav-link active" id="pending-tab"
-					data-bs-toggle="tab" data-bs-target="#pending" type="button"
-					role="tab" aria-controls="pending" aria-selected="true">Pending
-					approval</button>
-			</li>
-		</ul>
-		<div class="tab-content" id="myTabContent">
-			<div class="tab-pane fade show active" id="view" role="tabpanel"
-				aria-labelledby="view-tab">...</div>
-			<div class="tab-pane fade" id="pending" role="tabpanel"
-				aria-labelledby="pending-tab">...</div>
+		<form th:action="@{/view}" method="get">
+			<button type="submit" class="btn btn-primary">View</button>
+		</form>
+		<br>
+		<p th:if="${emptyList} == true" class="text-center">There are no
+			entries available.</p>
+		<div
+			th:classappend="${not #lists.isEmpty(entries)} ? 'table-responsive visible' : 'invisible'">
+			<table class="table table-striped">
+				<thead>
+					<tr>
+						<th scope="col">#</th>
+						<th scope="col">EmailId</th>
+						<th scope="col">Full Name</th>
+						<th scope="col">Mobile Number</th>
+						<th scope="col">Entry Text</th>
+						<th scope="col">Entry Image</th>
+						<th scope="col">Status</th>
+						<th scope="col">Action</th>
+					</tr>
+				</thead>
+				<tbody th:each="entry, entryCount: ${entries}">
+					<tr>
+						<td th:text="${entryCount.count}"></td>
+						<td th:text="${entry.emailId}"></td>
+						<td th:text="${entry.fullName}"></td>
+						<td th:text="${entry.mobileNumber}"></td>
+						<td th:text="${entry.entryText}"></td>
+						<td th:text="${entry.entryImage}"></td>
+						<td th:if="${entry.isApproved} == false">
+							<form th:action="@{/approve/__${entry.emailId}__}" method="post">
+								<button type="submit" class="btn btn-primary btn-sm">Approve</button>
+							</form>
+						</td>
+						<td th:if="${entry.isApproved} == true">
+							<i class="bi bi-check-circle-fill" style="color: green"></i>
+						</td>
+						<td>
+							<a data-bs-toggle="modal" data-bs-target="#staticBackdrop"
+								th:attrappend="data-target=${entry.emailId}, 
+								data-target=${entry.fullName}, 
+								data-target=${entry.mobileNumber}, 
+								data-target=${entry.entryText}">
+								<i class="bi bi-pencil-fill" style="color: blue"></i>
+							</a>
+							<div class="modal fade" id="staticBackdrop"
+								data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+								aria-labelledby="staticBackdropLabel" aria-hidden="true"
+								th:attrappend="emailId=${entry.emailId}, 
+								fullName=${entry.fullName}, 
+								mobileNumber=${entry.mobileNumber},
+								entryText=${entry.entryText}">
+								<div class="modal-dialog modal-dialog-centered">
+									<div class="modal-content">
+										<div class="modal-header">
+											<h5 class="modal-title" id="staticBackdropLabel">Edit
+												entry</h5>
+										</div>
+										<div class="modal-body">
+											<form th:object="${guestEntryUpdateDto}"
+												th:action="@{/update}" method="post" id="entryForm"
+												name="entryForm">
+												<div class="mb-3">
+													<label for="emailId" class="form-label">Email Id</label>
+													<input type="text" class="form-control" id="emailId"
+														th:value="${entry.emailId}" th:name="emailId">
+												</div>
+												<div class="mb-3">
+													<label for="fullName" class="form-label">Full Name</label>
+													<input type="text" class="form-control" id="fullName"
+														th:value="${entry.fullName}" th:name="fullName">
+												</div>
+												<div class="mb-3">
+													<label for="mobileNumber" class="form-label">Mobile
+														Number</label>
+													<input type="text" class="form-control" id="mobileNumber"
+														th:value="${entry.mobileNumber}" th:name="mobileNumber">
+												</div>
+												<div class="mb-3">
+													<label for="entryText" class="form-label">Entry
+														Text</label>
+													<input type="text" class="form-control" id="entryText"
+														th:value="${entry.entryText}" th:name="entryText">
+												</div>
+												<button type="submit" class="btn btn-primary">Submit</button>
+												<button type="button" class="btn btn-secondary"
+													data-bs-dismiss="modal">Close</button>
+											</form>
+										</div>
+									</div>
+								</div>
+							</div>
+							<span class="p-2"></span>
+							<a th:href="@{/delete/__${entry.emailId}__}">
+								<i class="bi bi-trash-fill"></i>
+							</a>
+						</td>
+					</tr>
+				</tbody>
+			</table>
 		</div>
 	</div>
 </body>

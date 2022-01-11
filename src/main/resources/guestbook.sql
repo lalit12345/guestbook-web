@@ -11,9 +11,11 @@ CREATE TABLE `user` (
   `entry_text` varchar(100) DEFAULT NULL,
   `entry_image` blob,
   `role` varchar(10) NOT NULL,
+  `is_approved` tinyint(4) DEFAULT '0',
+  `delete_flag` tinyint(4) DEFAULT '0',
   PRIMARY KEY (`user_id`),
   UNIQUE KEY `email_id_UNIQUE` (`email_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=latin1;
 
 -- INSERT data
 INSERT INTO guestbook.`user` (`user_id`, `email_id`, `password`, `full_name`, `mobile_number`, `entry_text`, `role`) VALUES (1, 'john@test.com', '$2a$12$.36i0tr/CudnMmCwVcZ18.rLlumLDCn5Iyfi10nHch2TMiVNi/a4W', 'John P', '01231231231', 'Entry text 1', 'USER');

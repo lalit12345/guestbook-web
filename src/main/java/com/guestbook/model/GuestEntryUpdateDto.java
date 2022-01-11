@@ -15,7 +15,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class RegistrationDetails implements Serializable {
+public class GuestEntryUpdateDto implements Serializable {
 	/**
 	* 
 	*/
@@ -25,13 +25,13 @@ public class RegistrationDetails implements Serializable {
 	@NotBlank(message = "{emailId.not-blank}")
 	private String emailId;
 
-	@NotBlank(message = "{password.not-blank}")
-	private String password;
-
 	@NotBlank(message = "{fullName.not-blank}")
 	private String fullName;
 
 	@Pattern(regexp = "^[0-9]+?|^$", message = "{mobileNumber.pattern}")
 	@NotBlank(message = "{mobileNumber.not-blank}")
 	private String mobileNumber;
+
+	private String entryText;
+
 }

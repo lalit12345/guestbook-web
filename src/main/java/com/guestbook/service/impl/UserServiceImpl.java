@@ -1,15 +1,23 @@
 package com.guestbook.service.impl;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.ui.Model;
 
 import com.guestbook.entity.User;
 import com.guestbook.exception.BusinessException;
 import com.guestbook.model.Constants;
-import com.guestbook.model.RegistrationDetails;
+import com.guestbook.model.GuestEntry;
+import com.guestbook.model.GuestEntryUpdateDto;
+import com.guestbook.model.RegistrationDto;
 import com.guestbook.repository.UserRepository;
 import com.guestbook.service.UserService;
 
@@ -26,7 +34,7 @@ public class UserServiceImpl implements UserService {
 	private UserRepository userRepository;
 
 	@Override
-	public void registeruser(RegistrationDetails registrationDetails) {
+	public void registeruser(RegistrationDto registrationDetails, Model model) {
 
 		log.info("User registration is in progress.");
 
@@ -36,7 +44,9 @@ public class UserServiceImpl implements UserService {
 
 			log.error("User already exists with emailId: {}", registrationDetails.getEmailId());
 
-			throw new BusinessException("User already exists");
+			model.addAttribute(Constants.USER_ALREADY_EXISTS, "User already exists with given emailId");
+
+			return;
 		}
 
 		User newUser = createUser(registrationDetails);
@@ -70,11 +80,76 @@ public class UserServiceImpl implements UserService {
 		return existingUser;
 	}
 
-	private User createUser(RegistrationDetails registrationDetails) {
+	@Override
+	public List<GuestEntry> getListOfEntries() {
+
+		Pageable pageable = PageRequest.of(0, 10);
+
+		Page<User> users = userRepository.findAllByRoleAndDeleteFlag(Constants.USER_ROLE, false, pageable);
+
+		List<GuestEntry> entries = users.getContent().stream().map(this::mapUsersToGuestEntry)
+				.collect(Collectors.toList());
+
+		return entries;
+	}
+
+	@Override
+	public User approve(String emailId) {
+
+		User user = userRepository.findByEmailId(emailId).get();
+
+		user.setApproved(true);
+
+		userRepository.save(user);
+
+		log.info("User entry approved successfully.");
+
+		return user;
+	}
+
+	@Override
+	public User update(GuestEntryUpdateDto guestEntryUpdateDto) {
+
+		User user = userRepository.findByEmailId(guestEntryUpdateDto.getEmailId()).get();
+
+		user.setEmailId(guestEntryUpdateDto.getEmailId());
+		user.setFullName(guestEntryUpdateDto.getFullName());
+		user.setMobileNumber(guestEntryUpdateDto.getMobileNumber());
+		user.setEntryText(guestEntryUpdateDto.getEntryText());
+
+		userRepository.save(user);
+
+		log.info("User entry updated successfully.");
+
+		return user;
+	}
+
+	@Override
+	public User delete(String emailId) {
+
+		User user = userRepository.findByEmailId(emailId).get();
+
+		user.setDeleteFlag(true);
+
+		userRepository.save(user);
+
+		log.info("User entry sucessfully marked as deleted.");
+
+		return user;
+	}
+
+	private User createUser(RegistrationDto registrationDetails) {
 
 		return User.builder().emailId(registrationDetails.getEmailId())
 				.password(bcryptPasswordEncoder.encode(registrationDetails.getPassword()))
 				.fullName(registrationDetails.getFullName()).mobileNumber(registrationDetails.getMobileNumber())
 				.role(Constants.USER_ROLE).build();
+	}
+
+	private GuestEntry mapUsersToGuestEntry(User user) {
+
+		return GuestEntry.builder().emailId(user.getEmailId()).fullName(user.getFullName())
+				.mobileNumber(user.getMobileNumber()).entryText(user.getEntryText()).entryImage(user.getEntryImage())
+				.isApproved(user.isApproved()).deleteFlag(user.isDeleteFlag()).build();
 	}
 }

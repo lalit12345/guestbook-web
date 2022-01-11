@@ -57,11 +57,11 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 				.permitAll()
 				.and()
 				.logout()
-                .invalidateHttpSession(true)
-                .clearAuthentication(true)
-                .logoutSuccessUrl("/login?logout")
+                	.invalidateHttpSession(true)
+                	.clearAuthentication(true)
+                	.logoutSuccessUrl("/login?logout")
                 .permitAll();
-		
+
 		http.csrf().disable();
 	}
 }
