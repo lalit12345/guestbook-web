@@ -29,8 +29,6 @@
 	<nav class="navbar navbar-dark bg-dark">
 		<div class="container-lg">
 			<form id="logoutForm" method="POST" th:action="@{/logout}">
-				<input type="hidden" name="${_csrf.parameterName}"
-					value="${_csrf.token}" />
 				<div sec:authorize="isAuthenticated()">
 					<span class="navbar-brand mb-1 h1">Welcome</span>
 					<span class="navbar-brand mb-1 h1" sec:authentication="name"></span>

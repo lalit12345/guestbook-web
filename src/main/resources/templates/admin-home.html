@@ -93,18 +93,19 @@
 												<div class="mb-3">
 													<label for="emailId" class="form-label">Email Id</label>
 													<input type="text" class="form-control" id="emailId"
-														th:value="${entry.emailId}" th:name="emailId">
+														th:value="${entry.emailId}" th:name="emailId" readonly>
 												</div>
 												<div class="mb-3">
 													<label for="fullName" class="form-label">Full Name</label>
 													<input type="text" class="form-control" id="fullName"
-														th:value="${entry.fullName}" th:name="fullName">
+														th:value="${entry.fullName}" th:name="fullName" required>
 												</div>
 												<div class="mb-3">
 													<label for="mobileNumber" class="form-label">Mobile
 														Number</label>
 													<input type="text" class="form-control" id="mobileNumber"
-														th:value="${entry.mobileNumber}" th:name="mobileNumber">
+														th:value="${entry.mobileNumber}" th:name="mobileNumber"
+														required>
 												</div>
 												<div class="mb-3">
 													<label for="entryText" class="form-label">Entry
@@ -121,9 +122,32 @@
 								</div>
 							</div>
 							<span class="p-2"></span>
-							<a th:href="@{/delete/__${entry.emailId}__}">
-								<i class="bi bi-trash-fill"></i>
+							<a data-bs-toggle="modal" data-bs-target="#deleteBackDrop">
+								<i class="bi bi-trash-fill" style="color: blue"></i>
 							</a>
+							<div class="modal fade" id="deleteBackDrop"
+								data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+								aria-labelledby="deleteBackDropLabel" aria-hidden="true">
+								<div class="modal-dialog modal-dialog-centered">
+									<div class="modal-content">
+										<div class="modal-header">
+											<h5 class="modal-title" id="deleteBackDropLabel">Confirm
+												delete</h5>
+										</div>
+										<div class="modal-body">
+											<form th:action="@{/delete/__${entry.emailId}__}"
+												method="get" id="deleteForm" name="deleteForm">
+												<p class="text-start">Are you sure you want to delete
+													the entry?</p>
+												<br>
+												<button type="submit" class="btn btn-primary">Delete</button>
+												<button type="button" class="btn btn-secondary"
+													data-bs-dismiss="modal">Cancel</button>
+											</form>
+										</div>
+									</div>
+								</div>
+							</div>
 						</td>
 					</tr>
 				</tbody>

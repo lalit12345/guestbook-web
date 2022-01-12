@@ -16,11 +16,12 @@
 		</div>
 	</nav>
 	<br>
-	<div class="container-lg" style="padding-right: 700px;">
+	<div class="container-lg">
 		<p class="h3">Sign In</p>
 		<br>
 		<form th:object=${credentials} th:action="@{/login}" method="post">
-			<span th:text="${message}"></span>
+			<div th:if="${message}" class="alert alert-success" role="alert"
+				th:text="${message}"></div>
 			<div th:if="${error}" class="has-error alert alert-danger"
 				th:text="${error}"></div>
 			<div class="mb-3">
