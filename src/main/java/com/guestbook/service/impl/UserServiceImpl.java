@@ -5,9 +5,6 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
@@ -83,12 +80,9 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public List<GuestEntry> getListOfEntries() {
 
-		Pageable pageable = PageRequest.of(0, 10);
+		List<User> users = userRepository.findAllByRoleAndDeleteFlag(Constants.USER_ROLE, false);
 
-		Page<User> users = userRepository.findAllByRoleAndDeleteFlag(Constants.USER_ROLE, false, pageable);
-
-		List<GuestEntry> entries = users.getContent().stream().map(this::mapUsersToGuestEntry)
-				.collect(Collectors.toList());
+		List<GuestEntry> entries = users.stream().map(this::mapUsersToGuestEntry).collect(Collectors.toList());
 
 		return entries;
 	}
