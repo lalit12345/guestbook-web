@@ -5,9 +5,10 @@ Application to create and manage guest entries.
 ## MySQL Database Setup
 
 1. Run below command to create database ***'CREATE DATABASE IF NOT EXISTS guestbook;'***
-2. If using Spring feature for DDL and DML
+2. Update MySQL password in ***src/main/resources/application.properties***
+3. If using Spring feature for DDL and DML
    - run this ***mvn spring-boot:run*** command and spring will create and insert data into table
-3. If creating manually
+4. If creating manually
    - Comment below two lines in ***src/main/resources/application.properties***
      - spring.jpa.hibernate.ddl-auto=none
      - spring.sql.init.mode=always
@@ -16,7 +17,7 @@ Application to create and manage guest entries.
 ## How to run steps:
 
 1. ***mvn spring-boot:run***
-2. http://localhost:8080/ OR http://localhost:8080/welcome
+2. http://localhost:8080/guestbook OR http://localhost:8080/guestbook/welcome
 
 ## Features
 
