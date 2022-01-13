@@ -9,7 +9,7 @@ Application to create and manage guest entries.
 3. Creating and Inserting the data
    - Run the scripts available in ***src/main/resources/guestbook.sql***
 
-## How to run steps:
+## How to run:
 
 1. ***mvn spring-boot:run***
 2. http://localhost:8080/guestbook OR http://localhost:8080/guestbook/welcome
