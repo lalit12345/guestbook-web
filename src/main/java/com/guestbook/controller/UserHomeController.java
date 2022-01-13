@@ -34,6 +34,10 @@ public class UserHomeController {
 
 	public static final String PATH = Constants.PATH_DELIMITER + VIEW;
 
+	private static final String ENTRY_CREATED_SUCCESSFULLY = "Entry is created successfully";
+
+	private static final String ADD_ATLEAST_ONE_ENTRY = "Please input a message or an image";
+
 	@GetMapping
 	public String get(Model model, HttpSession httpSession, Authentication authentication) {
 
@@ -58,13 +62,13 @@ public class UserHomeController {
 
 		if (!StringUtils.hasLength(guestEntryDto.getEntryText())
 				&& !StringUtils.hasLength(guestEntryDto.getMultipartFile().getOriginalFilename())) {
-			model.addAttribute("invalidEntry", "Add atleast one entry");
+			model.addAttribute(Constants.INVALID_ENTRY, ADD_ATLEAST_ONE_ENTRY);
 		} else {
 
 			userService.addEntry(emailId, guestEntryDto.getEntryText(),
 					guestEntryDto.getMultipartFile().getOriginalFilename());
 
-			model.addAttribute("validEntry", "Entry is made successfully");
+			model.addAttribute(Constants.VALID_ENTRY, ENTRY_CREATED_SUCCESSFULLY);
 		}
 
 		return VIEW;

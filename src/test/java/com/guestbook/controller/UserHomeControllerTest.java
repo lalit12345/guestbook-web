@@ -68,7 +68,7 @@ public class UserHomeControllerTest {
 				.param("entryText", "Thank you");
 
 		mockMvc.perform(builder).andExpect(status().isOk()).andExpect(view().name(UserHomeController.VIEW))
-				.andExpect(model().attribute("validEntry", "Entry is made successfully"));
+				.andExpect(model().attribute("validEntry", "Entry is created successfully"));
 	}
 
 	@Test
@@ -82,6 +82,6 @@ public class UserHomeControllerTest {
 				"multipartFile", "", MediaType.APPLICATION_PDF_VALUE, "sample content".getBytes()));
 
 		mockMvc.perform(builder).andExpect(status().isOk()).andExpect(view().name(UserHomeController.VIEW))
-				.andExpect(model().attribute("invalidEntry", "Add atleast one entry"));
+				.andExpect(model().attribute("invalidEntry", "Please input a message or an image"));
 	}
 }

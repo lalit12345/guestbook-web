@@ -140,6 +140,17 @@ public class AdminHomeControllerTest {
 	}
 
 	@Test
+	public void shouldNotUpdateEntryForEmptyEntryDetails() throws Exception {
+
+		when(securityService.isAuthenticated()).thenReturn(true);
+
+		MockHttpServletRequestBuilder builder = post("/update").param("emailId", "test@test.com");
+
+		mockMvc.perform(builder).andExpect(status().isOk()).andExpect(view().name(AdminHomeController.VIEW))
+				.andExpect(model().attribute("invalidEntry", "Please input a message or an image"));
+	}
+
+	@Test
 	public void shouldDeleteEntryForGivenEmailId() throws Exception {
 
 		when(securityService.isAuthenticated()).thenReturn(true);

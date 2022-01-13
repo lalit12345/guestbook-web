@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpSession;
-import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +11,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.CollectionUtils;
+import org.springframework.util.StringUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -48,6 +48,10 @@ public class AdminHomeController {
 	private static final String ENTRIES = "entries";
 
 	private static final String GUEST_ENTRY_UPDATE_DTO_ATTRIBITE = "guestEntryUpdateDto";
+
+	private static final String ENTRY_UPDATED_SUCCESSFULLY = "Entry updated successfully";
+
+	private static final String ADD_ATLEAST_ONE_ENTRY = "Please input a message or an image";
 
 	@GetMapping(PATH)
 	public String get(HttpSession httpSession, Authentication authentication) {
@@ -101,7 +105,7 @@ public class AdminHomeController {
 	}
 
 	@PostMapping("/update")
-	public String updateEntry(@Valid GuestEntryUpdateDto guestEntryUpdateDto, BindingResult errors, Model model) {
+	public String updateEntry(GuestEntryUpdateDto guestEntryUpdateDto, BindingResult errors, Model model) {
 
 		log.info("POST {}", "/update");
 
@@ -109,11 +113,17 @@ public class AdminHomeController {
 			return Constants.REDIRECT + LoginController.PATH;
 		}
 
-		if (errors.hasErrors()) {
-			return VIEW;
-		}
+		if (!StringUtils.hasLength(guestEntryUpdateDto.getEntryText())
+				&& !StringUtils.hasLength(guestEntryUpdateDto.getEntryImage())) {
 
-		userService.update(guestEntryUpdateDto);
+			model.addAttribute(Constants.INVALID_ENTRY, ADD_ATLEAST_ONE_ENTRY);
+			model.addAttribute("entryId", guestEntryUpdateDto.getEntryId());
+
+		} else {
+			userService.update(guestEntryUpdateDto);
+
+			model.addAttribute(Constants.VALID_ENTRY, ENTRY_UPDATED_SUCCESSFULLY);
+		}
 
 		fetchEntries(model);
 

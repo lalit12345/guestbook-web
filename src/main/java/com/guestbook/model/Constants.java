@@ -18,4 +18,8 @@ public class Constants {
 	public static final String MESSAGE_ATTRIBUTE = "message";
 
 	public static final String USER_ALREADY_EXISTS = "userAlreadyExists";
+	
+	public static final String INVALID_ENTRY = "invalidEntry";
+	
+	public static final String VALID_ENTRY = "validEntry";
 }

@@ -8,6 +8,7 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -134,7 +135,8 @@ public class UserServiceTest {
 
 		User user = User.builder().emailId("test1@test1.com").fullName("Test1 Test1").mobileNumber("1231231231")
 				.build();
-		Entry entry = Entry.builder().entryText("sample").entryImage("image1").user(user).build();
+		Entry entry = Entry.builder().entryText("sample").entryImage("image1").user(user)
+				.updatedDate(LocalDateTime.now()).build();
 		List<Entry> entries = new ArrayList<>();
 		entries.add(entry);
 
