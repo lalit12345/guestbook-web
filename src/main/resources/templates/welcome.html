@@ -9,21 +9,25 @@
 	th:href="@{/stylesheets/main.css}">
 <script th:src="@{/javascript/bootstrap.min.js}"></script>
 </head>
-<body>
-	<nav class="navbar navbar-dark bg-dark">
+<body class="d-flex flex-column min-vh-100">
+	<th:block th:include="base::nav-block"></th:block>
+	<div class="pt-2">
 		<div class="container-lg">
-			<span class="navbar-brand mb-1 h1">Welcome</span>
+			<span class="h1 ml-5">Welcome to the Guestbook</span>
+			<br>
+			<br>
 			<nav aria-label="breadcrumb">
 				<ol class="breadcrumb">
-					<li class="breadcrumb-item">
+					<li class="breadcrumb-item h4">
 						<a th:href="@{/register}">Register</a>
 					</li>
-					<li class="breadcrumb-item">
+					<li class="breadcrumb-item h4">
 						<a th:href="@{/login}">Sign In</a>
 					</li>
 				</ol>
 			</nav>
 		</div>
-	</nav>
+	</div>
+	<th:block th:include="base::footer-block"></th:block>
 </body>
 </html>

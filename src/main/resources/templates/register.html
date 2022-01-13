@@ -9,12 +9,8 @@
 	th:href="@{/stylesheets/main.css}">
 <script th:src="@{/javascript/bootstrap.min.js}"></script>
 </head>
-<body>
-	<nav class="navbar navbar-dark bg-dark">
-		<div class="container-lg">
-			<a class="navbar-brand" href="#">Guestbook</a>
-		</div>
-	</nav>
+<body class="d-flex flex-column min-vh-100">
+	<th:block th:include="base::nav-block"></th:block>
 	<br>
 	<div class="container-lg">
 		<p class="h3">Sign Up</p>
@@ -64,5 +60,7 @@
 			<button type="submit" class="btn btn-primary">Submit</button>
 		</form>
 	</div>
+	<br>
+	<th:block th:include="base::footer-block"></th:block>
 </body>
 </html>

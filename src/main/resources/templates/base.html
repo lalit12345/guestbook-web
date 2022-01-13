@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th=”http://www.thymeleaf.org
+	xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+
+<head>
+<meta charset="utf-8">
+<title>The Guestbook</title>
+<link rel="stylesheet" th:href="@{/stylesheets/bootstrap.min.css}">
+<link rel=”stylesheet” type="text/css"
+	th:href="@{/stylesheets/main.css}">
+<script th:src="@{/javascript/bootstrap.min.js}"></script>
+</head>
+<body>
+	<th:block th:fragment="nav-block">
+		<nav class="navbar navbar-dark bg-dark">
+			<div class="container-lg">
+				<img width="65px" height="65px"
+					th:src="@{/assets/images/gb_logo.png}">
+				<a class="navbar-brand mx-auto" th:href="@{/welcome}">The
+					Guestbook</a>
+			</div>
+		</nav>
+	</th:block>
+	<th:block th:fragment="home-block">
+		<div class="container-lg">
+			<form id="logoutForm" method="POST" th:action="@{/logout}">
+				<div sec:authorize="isAuthenticated()" class="pt-2">
+					<span class="h1 ml-5">Hello,</span>
+					<span class="mx-3 h4" style="color: #0d6efd"
+						sec:authentication="name"></span>
+				</div>
+				<div class="pt-4">
+					<button type="button" class="btn btn-primary"
+						data-bs-toggle="modal" data-bs-target="#staticBackdrop">Make
+						an entry</button>
+					<button type="button"
+						class="btn btn-primary position-relative float-right"
+						onclick="document.forms['logoutForm'].submit()">Logout</button>
+				</div>
+			</form>
+		</div>
+	</th:block>
+	<th:block th:fragment="footer-block">
+		<footer class="py-3 mt-auto bg-light text-dark">
+			<ul class="nav justify-content-center border-bottom pb-3 mb-3">
+				<li class="nav-item">
+					<a href="#" class="nav-link px-2 text-muted">Home</a>
+				</li>
+				<li class="nav-item">
+					<a href="#" class="nav-link px-2 text-muted">Features</a>
+				</li>
+				<li class="nav-item">
+					<a href="#" class="nav-link px-2 text-muted">FAQs</a>
+				</li>
+				<li class="nav-item">
+					<a href="#" class="nav-link px-2 text-muted">About</a>
+				</li>
+			</ul>
+			<p class="text-center text-muted">© 2021 Company, Inc</p>
+		</footer>
+	</th:block>
+</body>
+</html>
