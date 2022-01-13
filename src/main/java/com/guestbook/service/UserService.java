@@ -1,9 +1,11 @@
 package com.guestbook.service;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.ui.Model;
 
+import com.guestbook.entity.Entry;
 import com.guestbook.entity.User;
 import com.guestbook.model.GuestEntry;
 import com.guestbook.model.GuestEntryUpdateDto;
@@ -13,13 +15,13 @@ public interface UserService {
 
 	void registeruser(RegistrationDto registrationDetails, Model model);
 
-	User updateUser(String emailId, String entryText, String entryImagePath);
+	User addEntry(String emailId, String entryText, String entryImagePath);
 
-	List<GuestEntry> getListOfEntries();
+	Map<String, List<GuestEntry>> getListOfEntries();
 
-	User approve(String emailId);
+	Entry approve(String emailId, String entryId);
 
-	User update(GuestEntryUpdateDto guestEntryUpdateDto);
+	Entry update(GuestEntryUpdateDto guestEntryUpdateDto);
 
-	User delete(String emailId);
+	Entry delete(String emailId, String entryId);
 }

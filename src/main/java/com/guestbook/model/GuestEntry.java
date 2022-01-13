@@ -18,11 +18,9 @@ public class GuestEntry implements Serializable {
 	 */
 	private static final long serialVersionUID = 1L;
 
+	private String entryId;
+
 	private String emailId;
-
-	private String fullName;
-
-	private String mobileNumber;
 
 	private String entryText;
 
@@ -31,4 +29,6 @@ public class GuestEntry implements Serializable {
 	private boolean isApproved;
 
 	private boolean deleteFlag;
+
+	private String lastUpdated;
 }

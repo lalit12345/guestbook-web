@@ -23,7 +23,7 @@ import lombok.extern.slf4j.Slf4j;
 @RequestMapping(RegistrationController.PATH)
 public class RegistrationController {
 
-	public static final String REGISTRATION_DETAILS = "registrationDetails";
+	public static final String REGISTRATION_DETAILS = "registrationDto";
 
 	public static final String VIEW = "register";
 
@@ -43,7 +43,7 @@ public class RegistrationController {
 	}
 
 	@PostMapping
-	public String post(@Valid RegistrationDto registrationDetails, Model model, BindingResult errors,
+	public String post(@Valid RegistrationDto registrationDto, BindingResult errors, Model model,
 			HttpSession httpSession) {
 
 		log.info("POST {}", PATH);
@@ -52,7 +52,7 @@ public class RegistrationController {
 			return VIEW;
 		}
 
-		userService.registeruser(registrationDetails, model);
+		userService.registeruser(registrationDto, model);
 
 		if (StringUtils.hasLength((String) model.getAttribute(Constants.USER_ALREADY_EXISTS))) {
 

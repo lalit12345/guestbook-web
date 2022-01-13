@@ -1,6 +1,11 @@
 package com.guestbook.service.impl;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -8,13 +13,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
+import org.springframework.util.CollectionUtils;
 
+import com.guestbook.entity.Entry;
 import com.guestbook.entity.User;
 import com.guestbook.exception.BusinessException;
 import com.guestbook.model.Constants;
 import com.guestbook.model.GuestEntry;
 import com.guestbook.model.GuestEntryUpdateDto;
 import com.guestbook.model.RegistrationDto;
+import com.guestbook.repository.EntryRepository;
 import com.guestbook.repository.UserRepository;
 import com.guestbook.service.UserService;
 
@@ -29,6 +37,9 @@ public class UserServiceImpl implements UserService {
 
 	@Autowired
 	private UserRepository userRepository;
+
+	@Autowired
+	private EntryRepository entryRepository;
 
 	@Override
 	public void registeruser(RegistrationDto registrationDetails, Model model) {
@@ -54,7 +65,7 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public User updateUser(String emailId, String entryText, String entryImagePath) {
+	public User addEntry(String emailId, String entryText, String entryImagePath) {
 
 		Optional<User> user = userRepository.findByEmailId(emailId);
 
@@ -67,69 +78,140 @@ public class UserServiceImpl implements UserService {
 
 		User existingUser = user.get();
 
-		existingUser.setEntryText(entryText);
-		existingUser.setEntryImage(entryImagePath);
+		LocalDateTime now = LocalDateTime.now();
+		Entry newEntry = Entry.builder().entryText(entryText).entryImage(entryImagePath).user(existingUser)
+				.createdDate(LocalDateTime.now()).updatedDate(now).build();
+		List<Entry> entries = new ArrayList<>();
+		entries.add(newEntry);
+
+		existingUser.setEntries(entries);
 
 		userRepository.save(existingUser);
 
-		log.info("User updated successfully");
+		log.info("Entry added successfully for user: {}", emailId);
 
 		return existingUser;
 	}
 
 	@Override
-	public List<GuestEntry> getListOfEntries() {
+	public Map<String, List<GuestEntry>> getListOfEntries() {
 
-		List<User> users = userRepository.findAllByRoleAndDeleteFlag(Constants.USER_ROLE, false);
+		List<User> users = userRepository.findAllByRole(Constants.USER_ROLE);
 
-		List<GuestEntry> entries = users.stream().map(this::mapUsersToGuestEntry).collect(Collectors.toList());
+		Map<String, List<GuestEntry>> entries = new HashMap<>();
+
+		for (User user : users) {
+			String emailId = user.getEmailId();
+
+			List<GuestEntry> guestEntries = user.getEntries().stream().filter(entry -> !entry.isDeleteFlag())
+					.map(this::mapUsersToGuestEntry).collect(Collectors.toList());
+
+			if (!CollectionUtils.isEmpty(guestEntries)) {
+				entries.put(emailId, guestEntries);
+			}
+		}
 
 		return entries;
 	}
 
 	@Override
-	public User approve(String emailId) {
+	public Entry approve(String emailId, String entryId) {
 
-		User user = userRepository.findByEmailId(emailId).get();
+		Optional<User> user = userRepository.findByEmailId(emailId);
 
-		user.setApproved(true);
+		if (!user.isPresent()) {
 
-		userRepository.save(user);
+			log.error("User not found with emailId: {}", emailId);
+
+			throw new BusinessException("User not found");
+		}
+
+		Optional<Entry> entry = entryRepository.findById(Integer.parseInt(entryId));
+
+		if (!entry.isPresent()) {
+
+			log.error("Entry not found");
+
+			throw new BusinessException("Entry not found");
+		}
+
+		Entry existingEntry = entry.get();
+
+		existingEntry.setApproved(true);
+		existingEntry.setUpdatedDate(LocalDateTime.now());
+
+		entryRepository.save(existingEntry);
 
 		log.info("User entry approved successfully.");
 
-		return user;
+		return existingEntry;
 	}
 
 	@Override
-	public User update(GuestEntryUpdateDto guestEntryUpdateDto) {
+	public Entry update(GuestEntryUpdateDto guestEntryUpdateDto) {
 
-		User user = userRepository.findByEmailId(guestEntryUpdateDto.getEmailId()).get();
+		Optional<User> user = userRepository.findByEmailId(guestEntryUpdateDto.getEmailId());
 
-		user.setEmailId(guestEntryUpdateDto.getEmailId());
-		user.setFullName(guestEntryUpdateDto.getFullName());
-		user.setMobileNumber(guestEntryUpdateDto.getMobileNumber());
-		user.setEntryText(guestEntryUpdateDto.getEntryText());
+		if (!user.isPresent()) {
 
-		userRepository.save(user);
+			log.error("User not found with emailId: {}", guestEntryUpdateDto.getEmailId());
+
+			throw new BusinessException("User not found");
+		}
+
+		Optional<Entry> entry = entryRepository.findById(Integer.parseInt(guestEntryUpdateDto.getEntryId()));
+
+		if (!entry.isPresent()) {
+
+			log.error("Entry not found");
+
+			throw new BusinessException("Entry not found");
+		}
+
+		Entry existingEntry = entry.get();
+
+		existingEntry.setEntryText(guestEntryUpdateDto.getEntryText());
+		existingEntry.setEntryImage(guestEntryUpdateDto.getEntryImage());
+		existingEntry.setUpdatedDate(LocalDateTime.now());
+
+		entryRepository.save(existingEntry);
 
 		log.info("User entry updated successfully.");
 
-		return user;
+		return existingEntry;
 	}
 
 	@Override
-	public User delete(String emailId) {
+	public Entry delete(String emailId, String entryId) {
 
-		User user = userRepository.findByEmailId(emailId).get();
+		Optional<User> user = userRepository.findByEmailId(emailId);
 
-		user.setDeleteFlag(true);
+		if (!user.isPresent()) {
 
-		userRepository.save(user);
+			log.error("User not found with emailId: {}", emailId);
+
+			throw new BusinessException("User not found");
+		}
+
+		Optional<Entry> entry = entryRepository.findById(Integer.parseInt(entryId));
+
+		if (!entry.isPresent()) {
+
+			log.error("Entry not found");
+
+			throw new BusinessException("Entry not found");
+		}
+
+		Entry existingEntry = entry.get();
+
+		existingEntry.setDeleteFlag(true);
+		existingEntry.setUpdatedDate(LocalDateTime.now());
+
+		entryRepository.save(existingEntry);
 
 		log.info("User entry sucessfully marked as deleted.");
 
-		return user;
+		return existingEntry;
 	}
 
 	private User createUser(RegistrationDto registrationDetails) {
@@ -140,10 +222,14 @@ public class UserServiceImpl implements UserService {
 				.role(Constants.USER_ROLE).build();
 	}
 
-	private GuestEntry mapUsersToGuestEntry(User user) {
+	private GuestEntry mapUsersToGuestEntry(Entry entry) {
 
-		return GuestEntry.builder().emailId(user.getEmailId()).fullName(user.getFullName())
-				.mobileNumber(user.getMobileNumber()).entryText(user.getEntryText()).entryImage(user.getEntryImage())
-				.isApproved(user.isApproved()).deleteFlag(user.isDeleteFlag()).build();
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
+
+		String formattedDateTime = entry.getUpdatedDate().format(formatter);
+
+		return GuestEntry.builder().entryId(String.valueOf(entry.getId())).entryText(entry.getEntryText())
+				.entryImage(entry.getEntryImage()).lastUpdated(formattedDateTime).isApproved(entry.isApproved())
+				.deleteFlag(entry.isDeleteFlag()).build();
 	}
 }

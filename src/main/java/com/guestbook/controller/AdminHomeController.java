@@ -1,6 +1,7 @@
 package com.guestbook.controller;
 
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
@@ -69,7 +70,7 @@ public class AdminHomeController {
 			return Constants.REDIRECT + LoginController.PATH;
 		}
 
-		List<GuestEntry> entries = userService.getListOfEntries();
+		Map<String, List<GuestEntry>> entries = userService.getListOfEntries();
 
 		if (CollectionUtils.isEmpty(entries)) {
 			model.addAttribute(EMPTY_LIST, true);
@@ -82,16 +83,17 @@ public class AdminHomeController {
 		return VIEW;
 	}
 
-	@PostMapping("/approve/{userId}")
-	public String getListOfEntries(@NotBlank @PathVariable(name = "userId") String userId, Model model) {
+	@PostMapping("/approve/{userId}/{entryId}")
+	public String approve(@NotBlank @PathVariable(name = "userId") String userId,
+			@PathVariable(name = "entryId") String entryId, Model model) {
 
-		log.info("GET {}", "/approve");
+		log.info("POST {}", "/approve");
 
 		if (!securityService.isAuthenticated()) {
 			return Constants.REDIRECT + LoginController.PATH;
 		}
 
-		userService.approve(userId);
+		userService.approve(userId, entryId);
 
 		fetchEntries(model);
 
@@ -101,7 +103,7 @@ public class AdminHomeController {
 	@PostMapping("/update")
 	public String updateEntry(@Valid GuestEntryUpdateDto guestEntryUpdateDto, BindingResult errors, Model model) {
 
-		log.info("GET {}", "/update");
+		log.info("POST {}", "/update");
 
 		if (!securityService.isAuthenticated()) {
 			return Constants.REDIRECT + LoginController.PATH;
@@ -118,8 +120,9 @@ public class AdminHomeController {
 		return VIEW;
 	}
 
-	@GetMapping("/delete/{userId}")
-	public String deleteEntry(@NotBlank @PathVariable(name = "userId") String userId, Model model) {
+	@GetMapping("/delete/{userId}/{entryId}")
+	public String deleteEntry(@NotBlank @PathVariable(name = "userId") String userId,
+			@PathVariable(name = "entryId") String entryId, Model model) {
 
 		log.info("GET {}", "delete");
 
@@ -127,7 +130,7 @@ public class AdminHomeController {
 			return Constants.REDIRECT + LoginController.PATH;
 		}
 
-		userService.delete(userId);
+		userService.delete(userId, entryId);
 
 		fetchEntries(model);
 
@@ -136,7 +139,7 @@ public class AdminHomeController {
 
 	private void fetchEntries(Model model) {
 
-		List<GuestEntry> entries = userService.getListOfEntries();
+		Map<String, List<GuestEntry>> entries = userService.getListOfEntries();
 
 		model.addAttribute(ENTRIES, entries);
 	}

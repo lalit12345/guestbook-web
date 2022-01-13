@@ -59,8 +59,8 @@ public class UserHomeControllerTest {
 	@WithMockUser(username = "test@test.com", password = "pwd", roles = "USER")
 	public void shouldCreateAnEntryAndReturnView() throws Exception {
 
-		when(userService.updateUser(anyString(), anyString(), anyString()))
-				.thenReturn(User.builder().emailId("test@test.com").entryText("Thank you").build());
+		when(userService.addEntry(anyString(), anyString(), anyString()))
+				.thenReturn(User.builder().emailId("test@test.com").build());
 
 		MockHttpServletRequestBuilder builder = multipart(UserHomeController.PATH)
 				.file(new MockMultipartFile("multipartFile", "sample.pdf", MediaType.APPLICATION_PDF_VALUE,
@@ -75,8 +75,8 @@ public class UserHomeControllerTest {
 	@WithMockUser(username = "test@test.com", password = "pwd", roles = "USER")
 	public void shouldNotCreateAnEntryAndReturnViewWithInvalidData() throws Exception {
 
-		when(userService.updateUser(anyString(), anyString(), anyString()))
-				.thenReturn(User.builder().emailId("test@test.com").entryText("Thank you").build());
+		when(userService.addEntry(anyString(), anyString(), anyString()))
+				.thenReturn(User.builder().emailId("test@test.com").build());
 
 		MockHttpServletRequestBuilder builder = multipart(UserHomeController.PATH).file(new MockMultipartFile(
 				"multipartFile", "", MediaType.APPLICATION_PDF_VALUE, "sample content".getBytes()));

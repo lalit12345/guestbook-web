@@ -4,7 +4,7 @@
 
 <head>
 <meta charset="utf-8">
-<title>Index</title>
+<title>User Home</title>
 <link rel="stylesheet" th:href="@{/stylesheets/bootstrap.min.css}">
 <link rel=”stylesheet” type="text/css"
 	th:href="@{/stylesheets/main.css}">
@@ -31,7 +31,8 @@
 			<form id="logoutForm" method="POST" th:action="@{/logout}">
 				<div sec:authorize="isAuthenticated()">
 					<span class="navbar-brand mb-1 h1">Welcome</span>
-					<span class="navbar-brand mb-1 h1" sec:authentication="name"></span>
+					<span class="navbar-brand" style="color: #0d6efd"
+						sec:authentication="name"></span>
 				</div>
 			</form>
 			<button type="button"
@@ -61,7 +62,7 @@
 							method="post" enctype="multipart/form-data" id="entryForm"
 							name="entryForm">
 							<div class="mb-3">
-								<label for="entryText" class="form-label">Entry text</label>
+								<label for="entryText" class="form-label">Message</label>
 								<input type="text" class="form-control" id="entryText"
 									th:field="*{entryText}">
 								<div id="validationServerEntryTextFeedback"

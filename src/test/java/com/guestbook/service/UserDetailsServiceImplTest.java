@@ -41,7 +41,7 @@ public class UserDetailsServiceImplTest {
 	public void shouldReturnUserDetailsIfUserIsPresent() {
 
 		User user = User.builder().emailId("test@test.com").password("pwd").fullName("Test Test")
-				.mobileNumber("1231231231").isApproved(false).deleteFlag(false).role("USER").build();
+				.mobileNumber("1231231231").role("USER").build();
 
 		when(userRepository.findByEmailId(anyString())).thenReturn(Optional.of(user));
 

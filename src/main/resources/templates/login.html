@@ -3,7 +3,7 @@
 
 <head>
 <meta charset="utf-8">
-<title>Index</title>
+<title>Login</title>
 <link rel="stylesheet" th:href="@{/stylesheets/bootstrap.min.css}">
 <link rel=”stylesheet” type="text/css"
 	th:href="@{/stylesheets/main.css}">
@@ -19,7 +19,8 @@
 	<div class="container-lg">
 		<p class="h3">Sign In</p>
 		<br>
-		<form th:object=${credentials} th:action="@{/login}" method="post">
+		<form th:object=${credentials} th:action="@{/login}"
+			style="width: 350px;" method="post">
 			<div th:if="${message}" class="alert alert-success" role="alert"
 				th:text="${message}"></div>
 			<div th:if="${error}" class="has-error alert alert-danger"

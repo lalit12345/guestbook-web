@@ -4,7 +4,7 @@
 
 <head>
 <meta charset="utf-8">
-<title>Index</title>
+<title>Admin Home</title>
 <link rel="stylesheet" th:href="@{/stylesheets/bootstrap.min.css}">
 <link rel="stylesheet"
 	href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css">
@@ -18,7 +18,8 @@
 			<form id="logoutForm" method="POST" th:action="@{/logout}">
 				<div sec:authorize="isAuthenticated()">
 					<span class="navbar-brand mb-1 h1">Welcome</span>
-					<span class="navbar-brand mb-1 h1" sec:authentication="name"></span>
+					<span class="navbar-brand" style="color: #0d6efd"
+						sec:authentication="name"></span>
 				</div>
 			</form>
 			<button type="button"
@@ -35,30 +36,28 @@
 		<p th:if="${emptyList} == true" class="text-center">There are no
 			entries available.</p>
 		<div
-			th:classappend="${not #lists.isEmpty(entries)} ? 'table-responsive visible' : 'invisible'">
+			th:classappend="${not #maps.isEmpty(entries)} ? 'table-responsive visible' : 'invisible'">
 			<table class="table table-striped">
 				<thead>
 					<tr>
-						<th scope="col">#</th>
 						<th scope="col">EmailId</th>
-						<th scope="col">Full Name</th>
-						<th scope="col">Mobile Number</th>
-						<th scope="col">Entry Text</th>
+						<th scope="col">Message</th>
 						<th scope="col">Entry Image</th>
+						<th scope="col">Date</th>
 						<th scope="col">Status</th>
 						<th scope="col">Action</th>
 					</tr>
 				</thead>
-				<tbody th:each="entry, entryCount: ${entries}">
-					<tr>
-						<td th:text="${entryCount.count}"></td>
-						<td th:text="${entry.emailId}"></td>
-						<td th:text="${entry.fullName}"></td>
-						<td th:text="${entry.mobileNumber}"></td>
+				<tbody th:each="instance : ${entries}">
+					<tr th:each="entry: ${instance.value}">
+						<td th:text="${instance.key}"></td>
 						<td th:text="${entry.entryText}"></td>
 						<td th:text="${entry.entryImage}"></td>
+						<td th:text="${entry.lastUpdated}"></td>
 						<td th:if="${entry.isApproved} == false">
-							<form th:action="@{/approve/__${entry.emailId}__}" method="post">
+							<form
+								th:action="@{/approve/__${instance.key}__/__${entry.entryId}__}"
+								method="post">
 								<button type="submit" class="btn btn-primary btn-sm">Approve</button>
 							</form>
 						</td>
@@ -66,20 +65,14 @@
 							<i class="bi bi-check-circle-fill" style="color: green"></i>
 						</td>
 						<td>
-							<a data-bs-toggle="modal" data-bs-target="#staticBackdrop"
-								th:attrappend="data-target=${entry.emailId}, 
-								data-target=${entry.fullName}, 
-								data-target=${entry.mobileNumber}, 
-								data-target=${entry.entryText}">
-								<i class="bi bi-pencil-fill" style="color: blue"></i>
+							<a id="btn" data-bs-toggle="modal" data-backdrop="static"
+								th:attrappend="data-bs-target='#staticBackdrop'+${entry.entryId},data-target=${instance.key},data-target=${entry.entryText},data-target=${entry.entryId},data-target=${entry.entryImage}">
+								<i class="bi bi-pencil-fill" style="color: #0d6efd"></i>
 							</a>
-							<div class="modal fade" id="staticBackdrop"
+							<div class="modal fade" th:id="staticBackdrop+${entry.entryId}"
 								data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
 								aria-labelledby="staticBackdropLabel" aria-hidden="true"
-								th:attrappend="emailId=${entry.emailId}, 
-								fullName=${entry.fullName}, 
-								mobileNumber=${entry.mobileNumber},
-								entryText=${entry.entryText}">
+								th:attrappend="emailId=${instance.key},entryText=${entry.entryText},entryId=${entry.entryId},entryImage=${entry.entryImage}">
 								<div class="modal-dialog modal-dialog-centered">
 									<div class="modal-content">
 										<div class="modal-header">
@@ -93,26 +86,21 @@
 												<div class="mb-3">
 													<label for="emailId" class="form-label">Email Id</label>
 													<input type="text" class="form-control" id="emailId"
-														th:value="${entry.emailId}" th:name="emailId" readonly>
+														th:value="${instance.key}" th:name="emailId" readonly>
 												</div>
 												<div class="mb-3">
-													<label for="fullName" class="form-label">Full Name</label>
-													<input type="text" class="form-control" id="fullName"
-														th:value="${entry.fullName}" th:name="fullName" required>
-												</div>
-												<div class="mb-3">
-													<label for="mobileNumber" class="form-label">Mobile
-														Number</label>
-													<input type="text" class="form-control" id="mobileNumber"
-														th:value="${entry.mobileNumber}" th:name="mobileNumber"
-														required>
-												</div>
-												<div class="mb-3">
-													<label for="entryText" class="form-label">Entry
-														Text</label>
+													<label for="entryText" class="form-label">Message </label>
 													<input type="text" class="form-control" id="entryText"
 														th:value="${entry.entryText}" th:name="entryText">
 												</div>
+												<div class="mb-3">
+													<label for="entryImage" class="form-label">Entry
+														Image</label>
+													<input type="text" class="form-control" id="entryImage"
+														th:value="${entry.entryImage}" th:name="entryImage">
+												</div>
+												<input type="hidden" th:value="${entry.entryId}"
+													th:name="entryId" id="entryId">
 												<button type="submit" class="btn btn-primary">Submit</button>
 												<button type="button" class="btn btn-secondary"
 													data-bs-dismiss="modal">Close</button>
@@ -122,10 +110,11 @@
 								</div>
 							</div>
 							<span class="p-2"></span>
-							<a data-bs-toggle="modal" data-bs-target="#deleteBackDrop">
-								<i class="bi bi-trash-fill" style="color: blue"></i>
+							<a data-bs-toggle="modal"
+								th:attrappend="data-bs-target='#deleteBackDrop'+${entry.entryId}">
+								<i class="bi bi-trash-fill" style="color: #0d6efd"></i>
 							</a>
-							<div class="modal fade" id="deleteBackDrop"
+							<div class="modal fade" th:id="deleteBackDrop+${entry.entryId}"
 								data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
 								aria-labelledby="deleteBackDropLabel" aria-hidden="true">
 								<div class="modal-dialog modal-dialog-centered">
@@ -135,7 +124,8 @@
 												delete</h5>
 										</div>
 										<div class="modal-body">
-											<form th:action="@{/delete/__${entry.emailId}__}"
+											<form
+												th:action="@{/delete/__${instance.key}__/__${entry.entryId}__}"
 												method="get" id="deleteForm" name="deleteForm">
 												<p class="text-start">Are you sure you want to delete
 													the entry?</p>

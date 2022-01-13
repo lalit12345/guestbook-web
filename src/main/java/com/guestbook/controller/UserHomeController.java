@@ -61,7 +61,7 @@ public class UserHomeController {
 			model.addAttribute("invalidEntry", "Add atleast one entry");
 		} else {
 
-			userService.updateUser(emailId, guestEntryDto.getEntryText(),
+			userService.addEntry(emailId, guestEntryDto.getEntryText(),
 					guestEntryDto.getMultipartFile().getOriginalFilename());
 
 			model.addAttribute("validEntry", "Entry is made successfully");

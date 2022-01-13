@@ -1,10 +1,15 @@
 package com.guestbook.entity;
 
+import java.io.Serializable;
+import java.util.List;
+
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import lombok.AllArgsConstructor;
@@ -18,10 +23,14 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Entity
 @Table(name = "user")
-public class User {
+public class User implements Serializable {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 
 	@Id
-	@Column(name = "user_id")
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
 
@@ -36,18 +45,17 @@ public class User {
 	@Column(name = "mobile_number")
 	private String mobileNumber;
 
-	@Column(name = "entry_text")
-	private String entryText;
-
-	@Column(name = "entry_image")
-	private String entryImage;
+//	@Setter(AccessLevel.NONE)
+	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+	private List<Entry> entries;
 
 	private String role;
 
-	@Column(name = "is_approved", nullable = false, columnDefinition = "TINYINT(1)")
-	private boolean isApproved;
-
-	@Column(name = "delete_flag", nullable = false, columnDefinition = "TINYINT(1)")
-	private boolean deleteFlag;
-
+//	public void setEntries(Entry entry) {
+//		if (entries == null) {
+//			entries = new ArrayList<Entry>();
+//		}
+//		entries.add(entry);
+//		entry.setUser(this);
+//	}
 }

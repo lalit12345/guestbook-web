@@ -13,5 +13,5 @@ public interface UserRepository extends PagingAndSortingRepository<User, Integer
 
 	Optional<User> findByEmailId(String emailId);
 
-	List<User> findAllByRoleAndDeleteFlag(String role, boolean deleteFlag);
+	List<User> findAllByRole(String role);
 }

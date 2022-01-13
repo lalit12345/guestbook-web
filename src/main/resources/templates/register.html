@@ -3,7 +3,7 @@
 
 <head>
 <meta charset="utf-8">
-<title>Index</title>
+<title>Register</title>
 <link rel="stylesheet" th:href="@{/stylesheets/bootstrap.min.css}">
 <link rel=”stylesheet” type="text/css"
 	th:href="@{/stylesheets/main.css}">
@@ -19,7 +19,7 @@
 	<div class="container-lg">
 		<p class="h3">Sign Up</p>
 		<br>
-		<form th:object=${registrationDetails} th:action="@{/register}"
+		<form th:object=${registrationDto} th:action="@{/register}"
 			method="post">
 			<div th:if="${userAlreadyExists}"
 				class="has-error alert alert-danger" th:text="${userAlreadyExists}"></div>
@@ -27,8 +27,8 @@
 				<label for="exampleInputEmail1" class="form-label">Email Id</label>
 				<input type="email"
 					th:classappend="${#fields.hasErrors('emailId')} ? 'form-control is-invalid' : 'form-control'"
-					id="exampleInputEmail1" aria-describedby="emailHelp"
-					th:field="*{emailId}">
+					style="width: 350px;" id="exampleInputEmail1"
+					aria-describedby="emailHelp" th:field="*{emailId}">
 				<div id="validationServerEmailIdFeedback" class="invalid-feedback"
 					th:errors="*{emailId}"></div>
 			</div>
@@ -36,7 +36,8 @@
 				<label for="exampleInputPassword1" class="form-label">Password</label>
 				<input type="password"
 					th:classappend="${#fields.hasErrors('password')} ? 'form-control is-invalid' : 'form-control'"
-					id="exampleInputPassword1" th:field="*{password}">
+					style="width: 350px;" id="exampleInputPassword1"
+					th:field="*{password}">
 				<div id="validationServerPasswordFeedback" class="invalid-feedback"
 					th:errors="*{password}"></div>
 			</div>
@@ -45,7 +46,8 @@
 					Name</label>
 				<input type="text"
 					th:classappend="${#fields.hasErrors('fullName')} ? 'form-control is-invalid' : 'form-control'"
-					id="exampleInputFullName1" th:field="*{fullName}">
+					style="width: 350px;" id="exampleInputFullName1"
+					th:field="*{fullName}">
 				<div id="validationServerFullNameFeedback" class="invalid-feedback"
 					th:errors="*{fullName}"></div>
 			</div>
@@ -54,7 +56,8 @@
 					Number</label>
 				<input type="text"
 					th:classappend="${#fields.hasErrors('mobileNumber')} ? 'form-control is-invalid' : 'form-control'"
-					id="exampleInputMobileNumber1" th:field="*{mobileNumber}">
+					style="width: 350px;" id="exampleInputMobileNumber1"
+					th:field="*{mobileNumber}">
 				<div id="validationServerMobileNumberFeedback"
 					class="invalid-feedback" th:errors="*{mobileNumber}"></div>
 			</div>
